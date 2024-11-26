@@ -1,51 +1,65 @@
-## Project Overview:
-This project is an ETL (Extract, Transform, Load) pipeline designed for managing crowdfunding campaign data. The goal is to clean and organize the data from various sources such as CSV files, Excel files, and database dumps, then transform the data into a structured format and store it in a Postgres database.
+# ETL Mini Project: Contacts and Campaign Data Processing
 
-## Project Files:
-- crowdfunding_db_schema.sql: SQL file containing the schema of the database including table definitions and relationships.
-- crowdfunding_db.sql: SQL dump file used to populate the database with pre-existing data.
-- ETL_Mini_Project_JBracho_JAlmendarez.ipynb: The main ETL pipeline notebook that performs the extraction, transformation, and loading of data.
-- category.csv: CSV file containing category data (id, category name).
-- contacts.csv: CSV file containing contact details (first name, last name, email).
-- contacts.xlsx: Excel file containing additional contact information.
-- subcategory.csv: CSV file containing subcategory data.
-- campaign.csv: CSV file containing campaign information.
-- crowdfunding.xlsx: Excel file with additional campaign data.
-- crowdfundingErd.png: An ERD (Entity-Relationship Diagram) that visualizes the relationships between the database tables.
-- Database Structure:
- * The database schema defines the following tables:
-  * Category: Stores campaign categories.
-  * Subcategory: Stores subcategories tied to the campaign category.
-  * Contacts: Stores contact details for campaign owners.
-  * Campaign: Stores campaign-specific information such as goals, pledges, and the relationship to contacts and categories.
-- Key Components:
-  * Extraction: Data is extracted from CSV files (category.csv, subcategory.csv, campaign.csv) and Excel files (contacts.xlsx, crowdfunding.xlsx).
-  * Transformation: Data is cleaned, formatted, and transformed in Python using libraries such as Pandas. Operations include handling missing values, formatting date columns, and mapping foreign keys between related tables.
-  * Loading: The cleaned and transformed data is loaded into a PostgreSQL database using the schema defined in crowdfunding_db_schema.sql.
+## Overview
 
-## Steps to Run the Project:
-# Database Setup:
+This project demonstrates the process of extracting, transforming, and loading (ETL) data for creating a clean and structured dataset from raw data. The project involved processing crowdfunding and contacts data stored in spreadsheets to create standardized CSV files for further analysis.
 
-- Run the crowdfunding_db_schema.sql script to create the necessary database tables.
-- Populate the database using the crowdfunding_db.sql file.
-- Run ETL Pipeline:
-- Open the ETL_Mini_Project_JBracho_JAlmendarez.ipynb Jupyter notebook.
-- Follow the instructions to execute each step of the ETL process. This will extract the raw data, transform it, and load it into the database.
+## Key Concepts Learned
 
-## Visualize Relationships:
+1. **Extract, Transform, Load (ETL):**
+   - Extracting raw data from spreadsheets.
+   - Transforming data into clean, usable formats.
+   - Exporting the transformed data into standardized CSV files.
 
-The ERD crowdfundingErd.png helps visualize the relationships between the tables. It shows how the contacts, campaigns, categories, and subcategories are related in the database.
-Prerequisites:
-Python Libraries:
-pandas
-sqlalchemy
-psycopg2-binary (for Postgres connection)
-PostgreSQL: Make sure you have PostgreSQL installed and configured to run the SQL schema and dump.
-pgAdmin4: (Optional) You can use pgAdmin to manage your Postgres database and verify the data after loading.
-Project Contributors:
-Juan Bracho
-Jorge Almendarez
-Future Enhancements:
-Data Validation: Implement automated data validation scripts to ensure the data meets quality standards before loading.
-Incremental Load: Add support for incremental data loading to handle large datasets efficiently.
-Dashboards: Create visualizations (e.g., campaign performance, goal vs pledged analysis) using tools like Tableau or Matplotlib.
+2. **Pandas Library for Data Processing:**
+   - Using Pandas to read, manipulate, and export data.
+   - Handling missing or malformed data.
+   - Creating new columns by extracting values from existing ones.
+
+3. **Regex for Data Extraction:**
+   - Using regular expressions to extract specific patterns (e.g., IDs, names, and emails) from raw text.
+
+4. **Data Cleaning:**
+   - Handling `None` values and converting data types.
+   - Splitting concatenated fields into separate columns.
+   - Reordering and renaming columns for consistency.
+
+## Process Breakdown
+
+### Step 1: Process Contacts Data
+- **Input:** `contacts.xlsx` file with dictionary-like strings in a single column.
+- **Output:** `contacts.csv` file with clean columns:
+  - `contact_id` (integer)
+  - `first_name` (string)
+  - `last_name` (string)
+  - `email` (string)
+- **Steps:**
+  1. Extract `contact_id`, `name`, and `email` using regex.
+  2. Split the `name` into `first_name` and `last_name`.
+  3. Handle missing values by replacing with defaults (e.g., `0` for IDs).
+  4. Reorder columns and export as `contacts.csv`.
+
+### Step 2: Process Campaign Data
+- **Input:** `crowdfunding.xlsx` file with raw data including categories and subcategories.
+- **Output:** `campaign.csv`, `category.csv`, and `subcategory.csv` files.
+- **Steps:**
+  1. Split combined `category & sub-category` column into separate fields.
+  2. Create `category_id` and `subcategory_id` mappings.
+  3. Merge data to assign proper IDs to each campaign.
+  4. Format columns (e.g., convert dates to datetime format, goals to floats).
+  5. Export cleaned data to CSV files.
+
+## Tools Used
+- **Python**: Core programming language.
+- **Pandas**: For data manipulation and cleaning.
+- **Regex (re module)**: For extracting specific patterns.
+- **Excel**: Source format for the raw data.
+
+## Final Outputs
+- `contacts.csv`: A cleaned and structured file of contact data.
+- `campaign.csv`: A cleaned dataset for crowdfunding campaigns.
+- `category.csv`: A mapping of unique campaign categories.
+- `subcategory.csv`: A mapping of unique campaign subcategories.
+
+## Reflection
+This project provided hands-on experience with the full ETL process, highlighting the importance of structured workflows and robust error handling when working with raw and messy data. Mastery of Python libraries like Pandas and Regex proved essential for efficient data transformation.
